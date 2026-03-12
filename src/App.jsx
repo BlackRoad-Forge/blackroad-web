@@ -23,6 +23,8 @@ import RoadChainExplorer from './pages/RoadChainExplorer';
 import AboutPage from './pages/about-page';
 import LeadershipPage from './pages/leadership-page';
 import BlackRoadPricing from './pages/BlackRoadPricing';
+import BlogList from './pages/blog/BlogList';
+import BlogPost from './pages/blog/BlogPost';
 
 const inter = "'Inter', sans-serif";
 const mono = "'JetBrains Mono', monospace";
@@ -50,6 +52,7 @@ const NAV_ITEMS = [
   { path: '/chat2', label: 'Chat v2' },
   { path: '/pricing', label: 'Pricing' },
   { path: '/billing', label: 'Billing' },
+  { path: '/blog', label: 'Blog' },
 ];
 
 function AppNav() {
@@ -123,6 +126,8 @@ export default function App() {
         <Route path="/command" element={<BlackRoadCommand />} />
         <Route path="/pricing" element={<BlackRoadPricing />} />
         <Route path="/billing" element={<BlackRoadPricing />} />
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
     </BrowserRouter>
   );
