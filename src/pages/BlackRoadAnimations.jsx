@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const STOPS = ["#FF6B2B","#FF2255","#CC00AA","#8844FF","#4488FF","#00D4FF"];
 const GRAD  = "linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF)";
@@ -20,7 +20,7 @@ function CodeBlock({ code }) {
   const [ok, copy] = useCopy(code);
   return (
     <div style={{ position: "relative", background: "#050505", border: "1px solid #111", borderRadius: 6, marginTop: 12 }}>
-      <button onClick={copy} style={{ position: "absolute", top: 8, right: 8, fontFamily: mono, fontSize: 9, color: ok ? "#00D4FF" : "#2a2a2a", background: "none", border: "none", cursor: "pointer" }}>
+      <button onClick={copy} style={{ position: "absolute", top: 8, right: 8, fontFamily: mono, fontSize: 9, color: ok ? "#f5f5f5" : "#2a2a2a", background: "none", border: "none", cursor: "pointer" }}>
         {ok ? "copied ✓" : "copy"}
       </button>
       <pre style={{ fontFamily: mono, fontSize: 10, color: "#333", lineHeight: 1.7, padding: "14px 16px", overflowX: "auto", margin: 0 }}>{code}</pre>
@@ -230,7 +230,8 @@ function ConstellationMap() {
 
 function GradientText({ text = "BlackRoad OS", size = 32 }) {
   return (
-    <span style={{ fontFamily: sans, fontWeight: 700, fontSize: size, background: GRAD, backgroundSize: "200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "gradShift 3s linear infinite", letterSpacing: "-0.03em" }}>
+    <span style={{ fontFamily: sans, fontWeight: 700, fontSize: size, color: "#f5f5f5", letterSpacing: "-0.03em", position: "relative", display: "inline-block" }}>
+      <span style={{ position: "absolute", bottom: -4, left: 0, right: 0, height: 2, background: GRAD, backgroundSize: "200%", animation: "gradShift 3s linear infinite" }} />
       {text}
     </span>
   );
@@ -240,8 +241,8 @@ function GlitchText() {
   return (
     <div style={{ position: "relative", fontFamily: mono, fontSize: 22, fontWeight: 700, color: "#f0f0f0", letterSpacing: "0.1em" }}>
       <span style={{ position: "relative", zIndex: 2 }}>BLACKROAD</span>
-      <span style={{ position: "absolute", top: 0, left: 0, color: "#FF2255", opacity: 0.8, animation: "glitchR 3s step-end infinite", clipPath: "inset(0 0 60% 0)" }}>BLACKROAD</span>
-      <span style={{ position: "absolute", top: 0, left: 0, color: "#4488FF", opacity: 0.8, animation: "glitchB 3s step-end 0.1s infinite", clipPath: "inset(40% 0 0 0)" }}>BLACKROAD</span>
+      <span style={{ position: "absolute", top: 0, left: 0, color: "#d0d0d0", opacity: 0.8, animation: "glitchR 3s step-end infinite", clipPath: "inset(0 0 60% 0)" }}>BLACKROAD</span>
+      <span style={{ position: "absolute", top: 0, left: 0, color: "#a0a0a0", opacity: 0.8, animation: "glitchB 3s step-end 0.1s infinite", clipPath: "inset(40% 0 0 0)" }}>BLACKROAD</span>
     </div>
   );
 }
@@ -309,7 +310,7 @@ function ScrambleText() {
   }, [hover]);
   return (
     <span onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-      style={{ fontFamily: mono, fontSize: 22, color: "#8844FF", letterSpacing: "0.04em", cursor: "default", userSelect: "none" }}>
+      style={{ fontFamily: mono, fontSize: 22, color: "#f5f5f5", letterSpacing: "0.04em", cursor: "default", userSelect: "none" }}>
       {disp}
     </span>
   );
@@ -335,7 +336,7 @@ function PulseButton() {
     <div style={{ position: "relative", display: "inline-block" }}>
       {hov && <div style={{ position: "absolute", inset: -4, borderRadius: 10, background: "#FF225522", animation: "rippleOut 0.6s ease-out forwards" }} />}
       <button onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-        style={{ fontFamily: mono, fontSize: 12, color: "#FF2255", background: "transparent", border: "1px solid #FF225544", padding: "9px 22px", borderRadius: 6, cursor: "pointer", transition: "all 0.15s", borderColor: hov ? "#FF2255" : "#FF225544" }}>
+        style={{ fontFamily: mono, fontSize: 12, color: "#f5f5f5", background: "transparent", border: "1px solid #FF225544", padding: "9px 22px", borderRadius: 6, cursor: "pointer", transition: "all 0.15s", borderColor: hov ? "#FF2255" : "#FF225544" }}>
         Explore chain →
       </button>
     </div>
@@ -353,7 +354,7 @@ function MagneticButton() {
   };
   return (
     <button ref={ref} onMouseMove={handle} onMouseLeave={() => setPos({ x: 0, y: 0 })}
-      style={{ fontFamily: sans, fontWeight: 600, fontSize: 13, color: "#00D4FF", background: "rgba(0,212,255,0.05)", border: "1px solid rgba(0,212,255,0.2)", padding: "10px 22px", borderRadius: 6, cursor: "pointer", transform: `translate(${pos.x}px,${pos.y}px)`, transition: "transform 0.15s ease" }}>
+      style={{ fontFamily: sans, fontWeight: 600, fontSize: 13, color: "#f5f5f5", background: "rgba(0,212,255,0.05)", border: "1px solid rgba(0,212,255,0.2)", padding: "10px 22px", borderRadius: 6, cursor: "pointer", transform: `translate(${pos.x}px,${pos.y}px)`, transition: "transform 0.15s ease" }}>
       ◎ Magnetic
     </button>
   );
@@ -418,7 +419,7 @@ function FlipCard() {
           <span style={{ fontFamily: sans, fontWeight: 700, fontSize: 16, color: "#f0f0f0" }}>BlackRoad</span>
         </div>
         <div style={{ position: "absolute", inset: 0, background: "#0d0d0d", border: "1px solid #8844FF44", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-          <span style={{ fontFamily: mono, fontSize: 11, color: "#8844FF" }}>Z := yx − w</span>
+          <span style={{ fontFamily: mono, fontSize: 11, color: "#f5f5f5" }}>Z := yx − w</span>
         </div>
       </div>
     </div>
@@ -740,10 +741,9 @@ export default function AnimationLibrary() {
             BlackRoad OS, Inc. · Animation Library · v1.0
           </div>
           <h1 style={{ fontFamily: sans, fontWeight: 700, fontSize: "clamp(36px,6vw,64px)", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 16 }}>
-            <span style={{ background: GRAD, backgroundSize: "200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "gradShift 3s linear infinite" }}>
-              Motion.
-            </span>{" "}
+            <span style={{ color: "#f0f0f0" }}>Motion.</span>{" "}
             <span style={{ color: "#f0f0f0" }}>Built into the brand.</span>
+            <div style={{ height: 3, background: GRAD, backgroundSize: "200%", animation: "gradShift 3s linear infinite", marginTop: 8, maxWidth: 200 }} />
           </h1>
           <p style={{ fontFamily: body, fontSize: 15, color: "#2a2a2a", lineHeight: 1.8 }}>
             {ALL_ANIMS.length} copy-paste animations. Click any card to reveal the code.
@@ -773,7 +773,7 @@ export default function AnimationLibrary() {
 
         {/* Footer */}
         <div style={{ borderTop: "1px solid #0a0a0a", padding: "24px 28px", display: "flex", justifyContent: "space-between" }}>
-          <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>BlackRoad OS, Inc. · Animation Library · 186 repos · 48 domains · 8 agents</span>
+          <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>BlackRoad OS, Inc. · Animation Library · 207 repos · 141 domains · 8 agents</span>
           <span style={{ fontFamily: mono, fontSize: 9, color: "#0d0d0d" }}>Z:=yx−w · 2026</span>
         </div>
       </div>

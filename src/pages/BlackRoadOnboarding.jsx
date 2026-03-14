@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const STOPS   = ["#FF6B2B","#FF2255","#CC00AA","#8844FF","#4488FF","#00D4FF"];
 const GRAD    = "linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF)";
@@ -158,7 +158,7 @@ function CodeBlock({ lines, copyVal }) {
   return (
     <div style={{ background: "#050505", border: "1px solid #141414", overflow: "hidden", margin: "16px 0" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", padding: "6px 12px", borderBottom: "1px solid #0d0d0d" }}>
-        <button onClick={copy} style={{ fontFamily: mono, fontSize: 9, color: copied ? "#00D4FF" : "#2a2a2a", background: "none", border: "none", cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.08em", transition: "color 0.2s" }}>
+        <button onClick={copy} style={{ fontFamily: mono, fontSize: 9, color: copied ? "#f5f5f5" : "#2a2a2a", background: "none", border: "none", cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.08em", transition: "color 0.2s" }}>
           {copied ? "✓ copied" : "copy"}
         </button>
       </div>
@@ -171,7 +171,7 @@ function CodeBlock({ lines, copyVal }) {
 
 // ─── Steps ────────────────────────────────────────────────────────
 
-function StepWelcome({ data, setData, onNext }) {
+function StepWelcome({ _data, _setData, onNext }) {
   return (
     <div style={{ animation: "fadeUp 0.35s ease both" }}>
       {/* Big logo mark */}
@@ -193,7 +193,7 @@ function StepWelcome({ data, setData, onNext }) {
         {[
           ["01", "Connect infrastructure -- Pis, droplets, Cloudflare, Stripe"],
           ["02", "Deploy your 8 agents"],
-          ["03", "Configure your 48 domains"],
+          ["03", "Configure your 141 domains"],
           ["04", "Set up billing -- Operator, Sovereign, or Enterprise"],
         ].map(([n, t]) => (
           <div key={n} style={{ display: "flex", gap: 14, alignItems: "center" }}>
@@ -283,7 +283,7 @@ function StepInfrastructure({ data, setData, onNext, onBack }) {
                 <div style={{ fontFamily: inter, fontSize: 12, color: "#2a2a2a" }}>{p.sub}</div>
               </div>
               <div style={{ width: 18, height: 18, border: `1px solid ${active ? p.color : "#1a1a1a"}`, background: active ? p.color + "22" : "none", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" }}>
-                {active && <span style={{ fontFamily: mono, fontSize: 10, color: p.color }}>✓</span>}
+                {active && <span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5" }}>✓</span>}
               </div>
             </button>
           );
@@ -323,7 +323,7 @@ function StepAgents({ data, setData, onNext, onBack }) {
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
                   <span style={{ fontFamily: grotesk, fontWeight: 600, fontSize: 14, color: selected ? "#d0d0d0" : "#484848" }}>{a.name}</span>
-                  {a.rec && <span style={{ fontFamily: mono, fontSize: 8, color: a.color, background: a.color + "18", border: `1px solid ${a.color}28`, padding: "2px 6px" }}>recommended</span>}
+                  {a.rec && <span style={{ fontFamily: mono, fontSize: 8, color: "#f5f5f5", background: a.color + "18", border: `1px solid ${a.color}28`, padding: "2px 6px" }}>recommended</span>}
                 </div>
                 <div style={{ fontFamily: inter, fontSize: 12, color: "#2a2a2a" }}>{a.role}</div>
               </div>
@@ -338,7 +338,7 @@ function StepAgents({ data, setData, onNext, onBack }) {
               </select>
               {/* Checkbox */}
               <div style={{ width: 18, height: 18, border: `1px solid ${selected ? a.color : "#1a1a1a"}`, background: selected ? a.color + "22" : "none", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.15s" }}>
-                {selected && <span style={{ fontFamily: mono, fontSize: 10, color: a.color }}>✓</span>}
+                {selected && <span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5" }}>✓</span>}
               </div>
             </button>
           );
@@ -353,7 +353,7 @@ function StepAgents({ data, setData, onNext, onBack }) {
   );
 }
 
-function StepDomains({ data, setData, onNext, onBack }) {
+function StepDomains({ _data, _setData, onNext, onBack }) {
   const DOMAIN_GROUPS = [
     { label: "Primary", domains: ["blackroad.io", "blackroad.systems"] },
     { label: "Products", domains: ["roadcode.dev", "lucidia.ai", "blackroad.cloud"] },
@@ -364,7 +364,7 @@ function StepDomains({ data, setData, onNext, onBack }) {
     <div style={{ animation: "fadeUp 0.35s ease both" }}>
       <div style={{ fontFamily: mono, fontSize: 9, color: "#2a2a2a", textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 16 }}>Step 3 · Domains</div>
       <h2 style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 28, color: "#f0f0f0", letterSpacing: "-0.03em", marginBottom: 8 }}>Configure domains</h2>
-      <p style={{ fontFamily: inter, fontSize: 13, color: "#3a3a3a", lineHeight: 1.7, marginBottom: 32 }}>48 domains across your BlackRoad OS infrastructure. Review the primary groups below -- all are managed via Cloudflare.</p>
+      <p style={{ fontFamily: inter, fontSize: 13, color: "#3a3a3a", lineHeight: 1.7, marginBottom: 32 }}>141 domains across your BlackRoad OS infrastructure. Review the primary groups below -- all are managed via Cloudflare.</p>
 
       {DOMAIN_GROUPS.map(g => (
         <div key={g.label} style={{ marginBottom: 20 }}>
@@ -372,7 +372,7 @@ function StepDomains({ data, setData, onNext, onBack }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             {g.domains.map(d => (
               <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#080808", border: "1px solid #111" }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: "#00D4FF" }}>✓</span>
+                <span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5" }}>✓</span>
                 <span style={{ fontFamily: mono, fontSize: 12, color: "#686868" }}>{d}</span>
                 <span style={{ fontFamily: mono, fontSize: 9, color: "#242424", marginLeft: "auto" }}>cloudflare</span>
               </div>
@@ -396,7 +396,7 @@ function StepDomains({ data, setData, onNext, onBack }) {
 function StepBilling({ data, setData, onNext, onBack }) {
   const TIERS = [
     { id: "operator",   label: "Operator",    price: "$0",          sub: "Free forever. 2 agents, 1 domain, community support.", color: "#4488FF" },
-    { id: "sovereign",  label: "Sovereign",   price: "$499/mo",     sub: "All 8 agents, 48 domains, priority support, RoadChain witnessing.", color: "#8844FF" },
+    { id: "sovereign",  label: "Sovereign",   price: "$499/mo",     sub: "All 8 agents, 141 domains, priority support, RoadChain witnessing.", color: "#8844FF" },
     { id: "enterprise", label: "Enterprise",  price: "Custom",      sub: "Dedicated infrastructure, SLA, custom agents, on-premise option.", color: "#FF6B2B" },
   ];
 
@@ -417,7 +417,7 @@ function StepBilling({ data, setData, onNext, onBack }) {
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
                   <span style={{ fontFamily: grotesk, fontWeight: 600, fontSize: 14, color: active ? "#d0d0d0" : "#484848" }}>{t.label}</span>
-                  <span style={{ fontFamily: mono, fontSize: 11, color: active ? t.color : "#333", marginLeft: "auto" }}>{t.price}</span>
+                  <span style={{ fontFamily: mono, fontSize: 11, color: active ? "#f5f5f5" : "#333", marginLeft: "auto" }}>{t.price}</span>
                 </div>
                 <div style={{ fontFamily: inter, fontSize: 12, color: "#2a2a2a" }}>{t.sub}</div>
               </div>
@@ -442,7 +442,7 @@ function StepLaunch({ data }) {
   const [tasks, setTasks]       = useState([
     { label: "Connecting infrastructure", done: false },
     { label: "Deploying agents",        done: false },
-    { label: "Configuring 48 domains",  done: false },
+    { label: "Configuring 141 domains",  done: false },
     { label: "Activating Stripe billing", done: false },
     { label: "Running health checks",   done: false },
   ]);
@@ -480,7 +480,7 @@ function StepLaunch({ data }) {
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid #0a0a0a" }}>
                 <div style={{ width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   {t.done
-                    ? <span style={{ fontFamily: mono, fontSize: 11, color: "#00D4FF" }}>✓</span>
+                    ? <span style={{ fontFamily: mono, fontSize: 11, color: "#f5f5f5" }}>✓</span>
                     : <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1a1a1a" }} />
                   }
                 </div>
@@ -493,7 +493,7 @@ function StepLaunch({ data }) {
         <div style={{ animation: "fadeUp 0.4s ease both" }}>
           {/* Success */}
           <div style={{ display: "flex", gap: 3, marginBottom: 28 }}>
-            {STOPS.map((c, i) => (
+            {STOPS.map((c, _i) => (
               <div key={c} style={{ width: 4, height: 40, background: c, borderRadius: 2 }} />
             ))}
           </div>
@@ -501,7 +501,7 @@ function StepLaunch({ data }) {
             You're live.
           </h2>
           <p style={{ fontFamily: inter, fontSize: 14, color: "#3a3a3a", lineHeight: 1.75, marginBottom: 32, maxWidth: 420 }}>
-            <strong style={{ color: "#d0d0d0" }}>{data.workspaceName || "Your workspace"}</strong> is live on BlackRoad OS with {data.agents.length} agent{data.agents.length !== 1 ? "s" : ""}, 48 domains, and {data.infrastructure.length} infrastructure connection{data.infrastructure.length !== 1 ? "s" : ""}.
+            <strong style={{ color: "#d0d0d0" }}>{data.workspaceName || "Your workspace"}</strong> is live on BlackRoad OS with {data.agents.length} agent{data.agents.length !== 1 ? "s" : ""}, 141 domains, and {data.infrastructure.length} infrastructure connection{data.infrastructure.length !== 1 ? "s" : ""}.
           </p>
 
           {/* Summary */}
@@ -532,7 +532,7 @@ function StepLaunch({ data }) {
                 onMouseEnter={e => e.currentTarget.style.borderColor = "#1a1a1a"}
                 onMouseLeave={e => e.currentTarget.style.borderColor = "#0d0d0d"}
               >
-                <span style={{ fontFamily: mono, fontSize: 10, color: "#4488FF", flexShrink: 0, width: 96 }}>{link}</span>
+                <span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5", flexShrink: 0, width: 96 }}>{link}</span>
                 <span style={{ fontFamily: inter, fontSize: 13, color: "#383838" }}>{desc}</span>
               </div>
             ))}
@@ -562,7 +562,6 @@ export default function BlackRoadOnboarding() {
 
   const w       = useWidth();
   const mobile  = w < 640;
-  const isLast  = step === STEPS.length - 1;
 
   const next = () => setStep(s => Math.min(s + 1, STEPS.length - 1));
   const back = () => setStep(s => Math.max(s - 1, 0));
@@ -612,7 +611,7 @@ export default function BlackRoadOnboarding() {
             {/* Logo */}
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ display: "flex", gap: 2 }}>
-                {STOPS.map((c, i) => (
+                {STOPS.map((c, _i) => (
                   <div key={c} style={{ width: 2, height: 14, background: c, borderRadius: 2 }} />
                 ))}
               </div>
@@ -637,9 +636,9 @@ export default function BlackRoadOnboarding() {
                 const active = i === step;
                 return (
                   <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 20px", borderLeft: active ? "2px solid #4488FF" : "2px solid transparent", transition: "border-color 0.2s" }}>
-                    <span style={{ fontFamily: mono, fontSize: 11, color: done ? "#4488FF66" : active ? "#4488FF" : "#1a1a1a", width: 14, transition: "color 0.2s" }}>{s.icon}</span>
+                    <span style={{ fontFamily: mono, fontSize: 11, color: done ? "#555" : active ? "#f5f5f5" : "#1a1a1a", width: 14, transition: "color 0.2s" }}>{s.icon}</span>
                     <span style={{ fontFamily: inter, fontSize: 13, color: done ? "#3a3a3a" : active ? "#d0d0d0" : "#242424", transition: "color 0.2s" }}>{s.label}</span>
-                    {done && <span style={{ fontFamily: mono, fontSize: 10, color: "#4488FF44", marginLeft: "auto" }}>✓</span>}
+                    {done && <span style={{ fontFamily: mono, fontSize: 10, color: "#555", marginLeft: "auto" }}>✓</span>}
                   </div>
                 );
               })}

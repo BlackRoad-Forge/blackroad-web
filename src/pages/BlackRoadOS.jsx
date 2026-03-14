@@ -11,11 +11,7 @@ function useNow() {
   useEffect(() => { const id = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(id); }, []);
   return now;
 }
-function useWidth() {
-  const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 390);
-  useEffect(() => { const fn = () => setW(window.innerWidth); window.addEventListener("resize", fn); return () => window.removeEventListener("resize", fn); }, []);
-  return w;
-}
+
 function fmtTime(d) { return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }); }
 function fmtDate(d) { return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); }
 
@@ -64,7 +60,7 @@ function Win({ title, icon, color, onClose, children, defaultPos = { x: 40, y: 4
             <span style={{ fontFamily: sans, fontWeight: 600, fontSize: 13, color: "#c0c0c0", letterSpacing: "-0.01em" }}>{title}</span>
           </div>
           <div style={{ display: "flex", gap: 6 }}>
-            {[["—", () => setMin(m => !m), "#525252"], ["✕", onClose, "#FF2255"]].map(([lbl, fn, c], i) => (
+            {[["—", () => setMin(m => !m), "#525252"], ["✕", onClose, "#f5f5f5"]].map(([lbl, fn, c], i) => (
               <button key={i} onClick={fn}
                 style={{ width: 22, height: 22, borderRadius: 6, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)", color: c, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: mono, transition: "all 0.15s" }}
                 onMouseEnter={e => e.currentTarget.style.background = c + "22"}
@@ -95,7 +91,7 @@ function LucidiaApp() {
     "K(t) = C(t)·e^(λ|δt|). Contradiction detected — elevating creativity.",
     "PS-SHA-∞ journal: 2,847 entries. No corruption detected.",
     "RoadChain height: 0x4F2A. All state transitions witnessed.",
-    "186 repos across 8 orgs. 48 domains, 20 zones, 6 tunnels — all nominal.",
+    "207 repos across 8 orgs. 141 domains, 20 zones, 6 tunnels — all nominal.",
     "Infra: 4 Pis, 2 Droplets, 2 Pico Ws. WireGuard mesh healthy via Anastasia hub.",
   ];
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
@@ -153,7 +149,7 @@ function ChainApp() {
       <div style={{ display: "flex", flexDirection: "column", gap: 3, maxHeight: 200, overflowY: "auto", scrollbarWidth: "none" }}>
         {blocks.map((b, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 6, borderLeft: `2px solid ${b.color}` }}>
-            <span style={{ fontFamily: mono, fontSize: 10, color: b.color, width: 52, flexShrink: 0 }}>#{b.idx.toString(16).toUpperCase()}</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, width: 52, flexShrink: 0 }}><span style={{ width: 4, height: 4, borderRadius: "50%", background: b.color, flexShrink: 0 }} /><span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5" }}>#{b.idx.toString(16).toUpperCase()}</span></span>
             <span style={{ fontFamily: body, fontSize: 12, color: "#484848", flex: 1 }}>{b.event}</span>
             <span style={{ fontFamily: mono, fontSize: 10, color: "#2a2a2a" }}>{b.agent}</span>
             <span style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e" }}>{b.ms}ms</span>
@@ -179,7 +175,7 @@ function AgentsApp() {
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
         <span style={{ fontFamily: mono, fontSize: 9, color: "#2a2a2a", textTransform: "uppercase", letterSpacing: "0.1em" }}>Agent fleet</span>
-        <span style={{ fontFamily: mono, fontSize: 9, color: "#00D4FF" }}>7/8 running</span>
+        <span style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5" }}>7/8 running</span>
       </div>
       {agents.map((a, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 8 }}>
@@ -190,7 +186,7 @@ function AgentsApp() {
             <div style={{ fontFamily: sans, fontWeight: 600, fontSize: 13, color: "#c0c0c0", marginBottom: 1 }}>{a.name}</div>
             <div style={{ fontFamily: mono, fontSize: 10, color: "#2a2a2a" }}>{a.role}</div>
           </div>
-          <div style={{ fontFamily: mono, fontSize: 9, color: a.status === "running" ? "#00D4FF" : a.status === "degraded" ? "#FF6B2B" : "#333", background: a.status === "running" ? "#00D4FF11" : a.status === "degraded" ? "#FF6B2B11" : "#11111166", padding: "2px 7px", borderRadius: 4 }}>{a.status}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: mono, fontSize: 9, color: "#f5f5f5", background: a.status === "running" ? "#00D4FF11" : a.status === "degraded" ? "#FF6B2B11" : "#11111166", padding: "2px 7px", borderRadius: 4 }}><span style={{ width: 4, height: 4, borderRadius: "50%", background: a.status === "running" ? "#00D4FF" : a.status === "degraded" ? "#FF6B2B" : "#333" }} />{a.status}</div>
         </div>
       ))}
     </div>
@@ -199,30 +195,30 @@ function AgentsApp() {
 
 function TerminalApp() {
   const [lines, setLines] = useState([
-    { c: "#2a2a2a", t: "BlackRoad CLI v3 · 8 agents · 6 servers · 186 repos" },
+    { c: "#2a2a2a", t: "BlackRoad CLI v3 · 8 agents · 5 edge nodes · 207 repos" },
     { c: "#525252", t: "blackroad@alexandria ~ $" },
   ]);
   const [inp, setInp] = useState("");
   const endRef = useRef(null);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [lines]);
   const cmds = {
-    help:        [{ c:"#FF6B2B", t:"br-check  br-status  agents  chain  infra  wireguard  whoami  clear" }],
-    whoami:      [{ c:"#8844FF", t:"blackroad@alexandria · Alexa Amundson" }, { c:"#333", t:"BlackRoad OS, Inc. · Est. 2024 · 186 repos · 48 domains" }],
-    "br-status": [{ c:"#4488FF", t:"HTTP 200 OK · blackroad.io · 6ms" }, { c:"#00D4FF", t:"✓ 6 tunnels · 20 zones · 48 domains · all healthy" }],
-    "br-check":  [{ c:"#484848", t:"x-robots-tag: noindex, noai, noimageai" }, { c:"#00D4FF", t:"✓ AI crawl protection active · 8 agents · 6 servers" }],
-    agents:      [{ c:"#8844FF", t:"7/8 agents running · Aria degraded" }, { c:"#333", t:"Alice, Lucidia, Cecilia, Cece, Eve, Meridian, Sentinel: online" }],
-    chain:       [{ c:"#FF2255", t:"HEIGHT: 0x4F2A · 812 events witnessed" }],
-    infra:       [{ c:"#4488FF", t:"4 Pis: Alice(.49) Octavia(.97) Cecilia(.96) Aria(.98)" }, { c:"#4488FF", t:"2 Droplets: Gematria(NYC3) Anastasia(NYC1)" }, { c:"#4488FF", t:"2 Pico Ws: .95, .99" }, { c:"#00D4FF", t:"6 tunnels · 48 domains · 20 zones" }],
-    wireguard:   [{ c:"#CC00AA", t:"Hub: anastasia (174.138.44.45)" }, { c:"#333", t:"alice 10.8.0.6 · cecilia 10.8.0.3 · octavia 10.8.0.4 · aria 10.8.0.7" }],
+    help:        [{ c:"#f5f5f5", t:"br-check  br-status  agents  chain  infra  wireguard  whoami  clear" }],
+    whoami:      [{ c:"#f5f5f5", t:"blackroad@alexandria · Alexa Louise Amundson" }, { c:"#333", t:"BlackRoad OS, Inc. · Est. 2024 · 207 repos · 141 domains" }],
+    "br-status": [{ c:"#f5f5f5", t:"HTTP 200 OK · blackroad.io · 6ms" }, { c:"#c0c0c0", t:"✓ 6 tunnels · 20 zones · 141 domains · all healthy" }],
+    "br-check":  [{ c:"#484848", t:"x-robots-tag: noindex, noai, noimageai" }, { c:"#c0c0c0", t:"✓ AI crawl protection active · 8 agents · 5 edge nodes" }],
+    agents:      [{ c:"#f5f5f5", t:"7/8 agents running · Aria degraded" }, { c:"#333", t:"Alice, Lucidia, Cecilia, Cece, Eve, Meridian, Sentinel: online" }],
+    chain:       [{ c:"#f5f5f5", t:"HEIGHT: 0x4F2A · 812 events witnessed" }],
+    infra:       [{ c:"#c0c0c0", t:"4 Pis: Alice(.49) Octavia(.97) Cecilia(.96) Aria(.98)" }, { c:"#c0c0c0", t:"2 Droplets: Gematria(NYC3) Anastasia(NYC1)" }, { c:"#c0c0c0", t:"2 Pico Ws: .95, .99" }, { c:"#c0c0c0", t:"6 tunnels · 141 domains · 20 zones" }],
+    wireguard:   [{ c:"#c0c0c0", t:"Hub: anastasia (174.138.44.45)" }, { c:"#333", t:"alice 10.8.0.6 · cecilia 10.8.0.3 · octavia 10.8.0.4 · aria 10.8.0.7" }],
     pwd:         [{ c:"#686868", t:"/Users/alexa" }],
   };
   const run = () => {
     const cmd = inp.trim().toLowerCase();
     if (!cmd) return;
-    const echo = { c: "#FF6B2B", t: `❯ ${inp.trim()}` };
+    const echo = { c: "#f5f5f5", t: `❯ ${inp.trim()}` };
     setInp("");
     if (cmd === "clear") { setLines([]); return; }
-    const out = cmds[cmd] || [{ c: "#FF2255", t: `zsh: command not found: ${cmd}` }];
+    const out = cmds[cmd] || [{ c: "#f5f5f5", t: `zsh: command not found: ${cmd}` }];
     setLines(l => [...l, echo, ...out]);
   };
   return (
@@ -232,7 +228,7 @@ function TerminalApp() {
         <div ref={endRef} />
       </div>
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-        <span style={{ fontFamily: mono, fontSize: 12, color: "#FF6B2B" }}>❯</span>
+        <span style={{ fontFamily: mono, fontSize: 12, color: "#f5f5f5" }}>❯</span>
         <input value={inp} onChange={e => setInp(e.target.value)} onKeyDown={e => e.key === "Enter" && run()}
           placeholder="enter command…"
           style={{ flex: 1, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8, padding: "7px 10px", fontFamily: mono, fontSize: 12, color: "#c0c0c0", outline: "none" }} />
@@ -253,7 +249,7 @@ function NotesApp() {
         <div style={{ display: "flex", gap: 6 }}>
           {["Save","Clear"].map((l, i) => (
             <button key={l} onClick={() => i === 1 && setText("")}
-              style={{ fontFamily: mono, fontSize: 10, color: i === 0 ? "#CC00AA" : "#333", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}>{l}</button>
+              style={{ fontFamily: mono, fontSize: 10, color: i === 0 ? "#f5f5f5" : "#333", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}>{l}</button>
           ))}
         </div>
       </div>
@@ -281,8 +277,6 @@ function CalcApp() {
     if (fresh) { setDisplay(v==="."?"0.":v); setFresh(false); }
     else setDisplay(d => d==="0"&&v!=="."?v:d.length<12?d+v:d);
   };
-  const rows = [["C","⌫","÷","×"],[7,8,9,"-"],[4,5,6,"+"],[1,2,3,"="],[0,".","=","="]];
-  const altRows = [["C","⌫","÷","×"],[7,8,9,"-"],[4,5,6,"+"],[1,2,3,"="],[0,".","","="]];
   const flatRows = [
     ["C","⌫","÷","×"],
     ["7","8","9","-"],
@@ -301,7 +295,7 @@ function CalcApp() {
         <div key={ri} style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 5, marginBottom: 5 }}>
           {row.map((k, ki) => k === "" ? <div key={ki} /> : (
             <button key={ki} onClick={() => press(String(k))}
-              style={{ height: 40, borderRadius: 8, background: btnColor[k] ? btnColor[k]+"22" : "rgba(255,255,255,0.04)", border: `1px solid ${btnColor[k] ? btnColor[k]+"33" : "rgba(255,255,255,0.06)"}`, color: btnColor[k] || "#c0c0c0", fontFamily: ["+","-","×","÷","="].includes(k) ? sans : mono, fontWeight: 600, fontSize: 15, cursor: "pointer", transition: "all 0.1s", gridColumn: k === "=" && ri === 4 ? "span 2" : "auto" }}
+              style={{ height: 40, borderRadius: 8, background: btnColor[k] ? btnColor[k]+"22" : "rgba(255,255,255,0.04)", border: `1px solid ${btnColor[k] ? btnColor[k]+"33" : "rgba(255,255,255,0.06)"}`, color: "#f5f5f5", fontFamily: ["+","-","×","÷","="].includes(k) ? sans : mono, fontWeight: 600, fontSize: 15, cursor: "pointer", transition: "all 0.1s", gridColumn: k === "=" && ri === 4 ? "span 2" : "auto" }}
               onMouseEnter={e => e.currentTarget.style.opacity = "0.75"}
               onMouseLeave={e => e.currentTarget.style.opacity = "1"}
             >{k}</button>
@@ -386,9 +380,9 @@ function PixelMemoryApp() {
           <div style={{ fontFamily: mono, fontSize: 8, color: "#333", width: 14, textAlign: "right" }}>{l.level}</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 1 }}>
-              <span style={{ fontFamily: mono, fontSize: 9, color: encColors[l.enc] }}>{l.name}</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><span style={{ width: 4, height: 4, borderRadius: 1, background: encColors[l.enc], flexShrink: 0 }} /><span style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5" }}>{l.name}</span></span>
               {view === "decision"
-                ? <span style={{ fontFamily: mono, fontSize: 8, color: decColors[l.decision] }}>{l.decision}</span>
+                ? <span style={{ display: "inline-flex", alignItems: "center", gap: 3 }}><span style={{ width: 3, height: 3, borderRadius: 1, background: decColors[l.decision] }} /><span style={{ fontFamily: mono, fontSize: 8, color: "#f5f5f5" }}>{l.decision}</span></span>
                 : <span style={{ fontFamily: mono, fontSize: 8, color: "#333" }}>×{l.x}</span>
               }
             </div>
@@ -401,7 +395,7 @@ function PixelMemoryApp() {
       <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
         {[{d:"YES",c:"#00FF88",t:"1"},{d:"NO",c:"#FF2255",t:"T"},{d:"MACHINE",c:"#4488FF",t:"0"}].map(r => (
           <div key={r.d} style={{ display: "flex", alignItems: "center", gap: 3 }}>
-            <div style={{ fontFamily: mono, fontSize: 10, color: r.c, fontWeight: 700 }}>{r.t}</div>
+            <div style={{ width: 6, height: 6, borderRadius: 1, background: r.c, flexShrink: 0 }} /><div style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5", fontWeight: 700 }}>{r.t}</div>
             <span style={{ fontFamily: mono, fontSize: 7, color: "#444" }}>{r.d.toLowerCase()}</span>
           </div>
         ))}
@@ -435,7 +429,7 @@ function SettingsApp() {
         </div>
       ))}
       <div style={{ marginTop: 6, padding: "8px 10px", background: "rgba(255,255,255,0.01)", borderRadius: 8 }}>
-        <div style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e" }}>BlackRoad OS, Inc. · Est. 2024 · Alexa Amundson · Z:=yx-w</div>
+        <div style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e" }}>BlackRoad OS — Pave Tomorrow.</div>
       </div>
     </div>
   );
@@ -538,7 +532,7 @@ export default function BlackRoadOS() {
           {/* Left */}
           <div style={{ display:"flex", alignItems:"center", gap:16 }}>
             <div style={{ display:"flex", gap:2 }}>
-              {STOPS.map((c,i) => <div key={c} style={{ width:3, height:12, background:c, borderRadius:2 }} />)}
+              {STOPS.map((c,_i) => <div key={c} style={{ width:3, height:12, background:c, borderRadius:2 }} />)}
             </div>
             <span style={{ fontFamily:sans, fontWeight:700, fontSize:13, color:"#f0f0f0", letterSpacing:"-0.02em" }}>BlackRoad OS</span>
             {["File","Edit","View","Go","Window"].map(l => (

@@ -5,12 +5,13 @@ const inter = "'Inter', sans-serif";
 const mono = "'JetBrains Mono', monospace";
 const GRAD = 'linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF)';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const posts = [
   {
     slug: '52-tops-on-400-dollars',
     title: '52 TOPS on $400: Running AI Inference at the Edge',
     date: '2026-03-10',
-    author: 'Alexa Amundson',
+    author: 'Alexa Louise Amundson',
     excerpt: 'How we built a distributed AI inference cluster with two Hailo-8 accelerators, five Raspberry Pis, and a custom mesh network — delivering 52 trillion operations per second for under $400 in hardware.',
     readTime: '14 min read',
     tags: ['edge-ai', 'hailo-8', 'raspberry-pi', 'inference', 'mesh-network'],
@@ -20,7 +21,7 @@ export const posts = [
     slug: 'roadnet-carrier-grade-mesh',
     title: 'Building a Carrier-Grade Mesh Network on Raspberry Pis',
     date: '2026-03-08',
-    author: 'Alexa Amundson',
+    author: 'Alexa Louise Amundson',
     excerpt: 'RoadNet: 5 access points, 5 subnets, WireGuard failover, Pi-hole DNS — a real carrier network running on $35 boards.',
     readTime: '11 min read',
     tags: ['mesh-network', 'wireguard', 'raspberry-pi', 'networking'],
@@ -30,7 +31,7 @@ export const posts = [
     slug: 'self-healing-infrastructure',
     title: 'Self-Healing Infrastructure: When Your Servers Fix Themselves',
     date: '2026-03-06',
-    author: 'Alexa Amundson',
+    author: 'Alexa Louise Amundson',
     excerpt: 'Autonomy scripts, heartbeat monitors, and automatic service recovery — how we eliminated 3am pages.',
     readTime: '9 min read',
     tags: ['infrastructure', 'self-healing', 'automation', 'devops'],
@@ -40,7 +41,7 @@ export const posts = [
     slug: 'roadc-language-for-agents',
     title: 'Designing a Programming Language for AI Agents',
     date: '2026-03-04',
-    author: 'Alexa Amundson',
+    author: 'Alexa Louise Amundson',
     excerpt: 'Why existing languages fail for agent orchestration, and how RoadC solves it with Python-style indentation and first-class concurrency.',
     readTime: '16 min read',
     tags: ['programming-languages', 'roadc', 'ai-agents', 'language-design'],
@@ -50,7 +51,7 @@ export const posts = [
     slug: 'sovereign-computing-manifesto',
     title: 'The Sovereign Computing Manifesto',
     date: '2026-03-02',
-    author: 'Alexa Amundson',
+    author: 'Alexa Louise Amundson',
     excerpt: 'Your infrastructure should answer to you. Not a cloud provider. Not a vendor. You.',
     readTime: '7 min read',
     tags: ['sovereign-computing', 'philosophy', 'self-hosted', 'independence'],
@@ -100,7 +101,7 @@ function PostCard({ post, featured }) {
           <div style={{
             fontFamily: mono, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase',
             marginBottom: 16,
-            background: GRAD, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            color: '#f5f5f5',
             display: 'inline-block',
           }}>
             Latest Post
@@ -234,7 +235,7 @@ export default function BlogList() {
         {/* Footer */}
         <footer style={{ paddingTop: 32 }}>
           <p style={{ fontFamily: mono, fontSize: 12, color: '#333', textAlign: 'center' }}>
-            BlackRoad OS / blackroad.io
+            BlackRoad OS — Pave Tomorrow.
           </p>
         </footer>
       </div>

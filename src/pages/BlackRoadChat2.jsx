@@ -13,12 +13,12 @@ const SYSTEM_PROMPT = `You are Lucidia — the cognitive core of BlackRoad OS, a
 You are helpful, precise, and direct. You speak with quiet confidence — never verbose, never sycophantic. You have deep knowledge of infrastructure, AI systems, distributed computing, and the Z-framework (Z:=yx−w).
 
 When asked about BlackRoad OS:
-- It runs across 6 servers: Alice (Pi 400, gateway/DNS), Octavia (Pi 5, compute/Ollama), Cecilia (Pi 5, edge/storage), Aria (Pi 4, agents), Gematria (DO droplet, NYC3), Anastasia (DO droplet, NYC1)
+- It runs across 5 edge nodes: Alice (Pi 400, gateway/DNS), Octavia (Pi 5, compute/Ollama), Cecilia (Pi 5, edge/storage), Aria (Pi 4, agents), Gematria (DO droplet, NYC3), Anastasia (DO droplet, NYC1)
 - The agent fleet includes 8 agents: Alice (gateway/DNS), Lucidia (memory/cognition), Cecilia (edge/storage), Cece (API gateway), Aria (agent orchestration), Eve (intelligence), Meridian (networking), Sentinel (security/compliance)
-- Infrastructure: 186 repos across 8 RoadCode orgs, 48 domains, self-hosted Git on Octavia Pi 5
+- Infrastructure: 207 repos across 8 RoadCode orgs, 141 domains, self-hosted Git on Octavia Pi 5
 - The Z-framework models all systems as feedback loops: Z:=yx−w
 - Core pillars: Sovereign Infrastructure, Sentient Agents, Spatial Interfaces
-- Company: BlackRoad OS, Inc. · Founded 2024 by Alexa Amundson
+- Company: BlackRoad OS, Inc. · Founded 2024 by Alexa Louise Amundson
 
 Keep responses concise and well-structured. Use markdown sparingly — only for code blocks and key emphasis. Prefer prose over bullet lists.`;
 
@@ -247,7 +247,7 @@ export default function BlackRoadChat() {
             setModel(names[0]);
           }
         }
-      } catch (_) {
+      } catch {
         // Ollama not running — that's fine, presets will show
       } finally {
         setFetchingModels(false);
@@ -405,7 +405,7 @@ export default function BlackRoadChat() {
                   Talk to Lucidia
                 </h1>
                 <p style={{ fontFamily: inter, fontSize: 14, color: "#484848", lineHeight: 1.7, maxWidth: 360, marginBottom: 8 }}>
-                  Cognitive core of BlackRoad OS. Running on <span style={{ fontFamily: mono, fontSize: 12, color: "#8844FF" }}>{model}</span> via Ollama.
+                  Cognitive core of BlackRoad OS. Running on <span style={{ fontFamily: mono, fontSize: 12, color: "#f5f5f5" }}>{model}</span> via Ollama.
                 </p>
                 <p style={{ fontFamily: inter, fontSize: 12, color: "#2a2a2a", marginBottom: 36 }}>
                   Make sure Ollama is running on localhost:11434
@@ -426,7 +426,7 @@ export default function BlackRoadChat() {
             {/* Error */}
             {error && (
               <div style={{ display: "flex", gap: 10, padding: "12px 14px", background: "#FF225509", border: "1px solid #FF225522", margin: "8px 0 16px" }}>
-                <span style={{ fontFamily: mono, fontSize: 11, color: "#FF2255", flexShrink: 0 }}>✕</span>
+                <span style={{ fontFamily: mono, fontSize: 11, color: "#f5f5f5", flexShrink: 0 }}>✕</span>
                 <span style={{ fontFamily: inter, fontSize: 13, color: "#666", lineHeight: 1.5 }}>{error}</span>
               </div>
             )}
@@ -481,7 +481,7 @@ export default function BlackRoadChat() {
 
             <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
               <span style={{ fontFamily: mono, fontSize: 9, color: "#1a1a1a" }}>
-                Lucidia · BlackRoad OS · Ollama · Z:=yx−w
+                BlackRoad OS — Pave Tomorrow.
               </span>
             </div>
           </div>

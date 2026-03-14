@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { trackEvent } from "../lib/analytics";
 
+const AUTH_API = "https://auth.blackroad.io";
 const STOPS   = ["#FF6B2B","#FF2255","#CC00AA","#8844FF","#4488FF","#00D4FF"];
 const GRAD    = "linear-gradient(90deg,#FF6B2B,#FF2255,#CC00AA,#8844FF,#4488FF,#00D4FF)";
 const mono    = "'JetBrains Mono', monospace";
@@ -87,7 +89,7 @@ function Field({ label, type = "text", value, onChange, placeholder, error, hint
           >{show ? "hide" : "show"}</button>
         )}
       </div>
-      {error && <div style={{ fontFamily: inter, fontSize: 11, color: "#FF2255", marginTop: 5, lineHeight: 1.5 }}>{error}</div>}
+      {error && <div style={{ fontFamily: inter, fontSize: 11, color: "#f5f5f5", marginTop: 5, lineHeight: 1.5 }}><span style={{ color: "#FF2255", marginRight: 4 }}>&#x2022;</span>{error}</div>}
     </div>
   );
 }
@@ -162,9 +164,23 @@ function LoginView({ onSwitch, onSuccess }) {
     if (Object.keys(e).length) { setErrors(e); return; }
     setErrors({});
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1400));
-    setLoading(false);
-    onSuccess();
+    try {
+      const res = await fetch(`${AUTH_API}/api/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setErrors({ email: data.error || 'Sign in failed' }); setLoading(false); return; }
+      localStorage.setItem('br_token', data.token);
+      localStorage.setItem('br_user', JSON.stringify(data.user));
+      trackEvent('signin_success');
+      setLoading(false);
+      onSuccess();
+    } catch {
+      setErrors({ email: 'Connection failed' });
+      setLoading(false);
+    }
   };
 
   return (
@@ -239,9 +255,23 @@ function SignupView({ onSwitch, onSuccess }) {
     if (Object.keys(e).length) { setErrors(e); return; }
     setErrors({});
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1600));
-    setLoading(false);
-    onSuccess();
+    try {
+      const res = await fetch(`${AUTH_API}/api/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setErrors({ email: data.error || 'Sign up failed' }); setLoading(false); return; }
+      localStorage.setItem('br_token', data.token);
+      localStorage.setItem('br_user', JSON.stringify(data.user));
+      trackEvent('signup_success');
+      setLoading(false);
+      onSuccess();
+    } catch {
+      setErrors({ email: 'Connection failed' });
+      setLoading(false);
+    }
   };
 
   return (
@@ -253,7 +283,7 @@ function SignupView({ onSwitch, onSuccess }) {
       </p>
 
       <Field label="Name" value={name} onChange={v => { setName(v); setErrors(e => ({...e, name:""})); }}
-        placeholder="Alexa Amundson" error={errors.name} autoComplete="name" />
+        placeholder="Alexa Louise Amundson" error={errors.name} autoComplete="name" />
       <Field label="Email" type="email" value={email} onChange={v => { setEmail(v); setErrors(e => ({...e, email:""})); }}
         placeholder="alexa@blackroad.io" error={errors.email} autoComplete="email" />
 
@@ -265,7 +295,7 @@ function SignupView({ onSwitch, onSuccess }) {
           {[1,2,3].map(i => (
             <div key={i} style={{ flex: 1, height: 2, background: i <= strength ? strengthColors[strength] : "#111", transition: "background 0.3s", borderRadius: 2 }} />
           ))}
-          <span style={{ fontFamily: mono, fontSize: 9, color: strengthColors[strength], width: 40, textAlign: "right", transition: "color 0.3s" }}>{strengthLabels[strength]}</span>
+          <span style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5", width: 40, textAlign: "right", transition: "color 0.3s" }}>{strengthLabels[strength]}</span>
         </div>
       )}
 
@@ -273,13 +303,13 @@ function SignupView({ onSwitch, onSuccess }) {
       <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: errors.agreed ? 6 : 24, cursor: "pointer" }}
         onClick={() => { setAgreed(a => !a); setErrors(e => ({...e, agreed:""})); }}>
         <div style={{ width: 16, height: 16, border: `1px solid ${agreed ? "#8844FF" : errors.agreed ? "#FF2255" : "#1a1a1a"}`, background: agreed ? "#8844FF18" : "none", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1, transition: "all 0.15s" }}>
-          {agreed && <span style={{ fontFamily: mono, fontSize: 10, color: "#8844FF" }}>✓</span>}
+          {agreed && <span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5" }}>✓</span>}
         </div>
         <span style={{ fontFamily: inter, fontSize: 12, color: "#2a2a2a", lineHeight: 1.5 }}>
           I agree to the <span style={{ color: "#484848" }}>Terms of Service</span> and <span style={{ color: "#484848" }}>Privacy Policy</span>
         </span>
       </div>
-      {errors.agreed && <div style={{ fontFamily: inter, fontSize: 11, color: "#FF2255", marginBottom: 20, marginTop: -2 }}>{errors.agreed}</div>}
+      {errors.agreed && <div style={{ fontFamily: inter, fontSize: 11, color: "#f5f5f5", marginBottom: 20, marginTop: -2 }}><span style={{ color: "#FF2255", marginRight: 4 }}>&#x2022;</span>{errors.agreed}</div>}
 
       <GradBtn onClick={submit} loading={loading} disabled={!name || !email || !password}>Create account →</GradBtn>
 
@@ -310,9 +340,9 @@ function ForgotView({ onSwitch }) {
     <div style={{ animation: "fadeUp 0.3s ease both" }}>
       <div style={{ marginBottom: 28 }}>
         <div style={{ width: 48, height: 48, border: "1px solid #00D4FF33", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
-          <span style={{ fontFamily: mono, fontSize: 20, color: "#00D4FF" }}>✓</span>
+          <span style={{ fontFamily: mono, fontSize: 20, color: "#f5f5f5" }}>✓</span>
         </div>
-        <div style={{ fontFamily: mono, fontSize: 9, color: "#00D4FF", textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 10 }}>Check your inbox</div>
+        <div style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5", textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 10 }}><span style={{ color: "#00D4FF", marginRight: 4 }}>&#x2022;</span>Check your inbox</div>
         <h2 style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 24, color: "#f0f0f0", letterSpacing: "-0.03em", marginBottom: 8 }}>Reset link sent.</h2>
         <p style={{ fontFamily: inter, fontSize: 14, color: "#2a2a2a", lineHeight: 1.7 }}>
           We sent a password reset link to <span style={{ color: "#686868" }}>{email}</span>. Check your inbox and click the link within 15 minutes.
@@ -357,8 +387,8 @@ function SuccessView({ mode }) {
         ))}
       </div>
 
-      <div style={{ fontFamily: mono, fontSize: 9, color: "#00D4FF", textTransform: "uppercase", letterSpacing: "0.16em", marginBottom: 12 }}>
-        {mode === "login" ? "Authenticated" : "Account created"}
+      <div style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5", textTransform: "uppercase", letterSpacing: "0.16em", marginBottom: 12 }}>
+        <span style={{ color: "#00D4FF", marginRight: 4 }}>&#x2022;</span>{mode === "login" ? "Authenticated" : "Account created"}
       </div>
       <h2 style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 32, color: "#f0f0f0", letterSpacing: "-0.04em", marginBottom: 12 }}>
         {mode === "login" ? "Welcome back." : "You're in."}
@@ -375,7 +405,7 @@ function SuccessView({ mode }) {
           : ["Generating genesis hash", "Seeding soul chain", "Provisioning workspace"]
         ).map((s, i) => (
           <div key={i} style={{ display: "flex", gap: 10, alignItems: "center", animation: `fadeUp 0.3s ease ${i * 0.2}s both` }}>
-            <span style={{ fontFamily: mono, fontSize: 10, color: STOPS[i * 2] }}>✓</span>
+            <span style={{ fontFamily: mono, fontSize: 10, color: "#f5f5f5" }}>✓</span>
             <span style={{ fontFamily: inter, fontSize: 12, color: "#2a2a2a" }}>{s}</span>
           </div>
         ))}
@@ -429,13 +459,13 @@ function LeftPanel() {
           Sovereign.<br />Sentient.<br />Spatial.
         </h2>
         <p style={{ fontFamily: inter, fontSize: 14, color: "#2a2a2a", lineHeight: 1.8, maxWidth: 320 }}>
-          The distributed agent OS. 186 repos. 8 agents. 48 domains. Every action witnessed on RoadChain.
+          The distributed agent OS. 207 repos. 8 agents. 141 domains. Every action witnessed on RoadChain.
         </p>
       </div>
 
       {/* Stats */}
       <div style={{ display: "flex", gap: 2, marginTop: 40 }}>
-        {[["186", "repos"], ["8", "agents"], ["48", "domains"]].map(([v, l]) => (
+        {[["207", "repos"], ["8", "agents"], ["141", "domains"]].map(([v, l]) => (
           <div key={l} style={{ flex: 1, background: "#080808", border: "1px solid #0d0d0d", padding: "12px 14px" }}>
             <div style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 20, color: "#686868", letterSpacing: "-0.03em", marginBottom: 3 }}>{v}</div>
             <div style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e" }}>{l}</div>
@@ -528,7 +558,7 @@ export default function BlackRoadAuth() {
             {!split && (
               <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "20px 24px", borderBottom: "1px solid #0a0a0a" }}>
                 <div style={{ display: "flex", gap: 2 }}>
-                  {STOPS.map((c, i) => <div key={c} style={{ width: 2, height: 13, background: c, borderRadius: 2 }} />)}
+                  {STOPS.map((c, _i) => <div key={c} style={{ width: 2, height: 13, background: c, borderRadius: 2 }} />)}
                 </div>
                 <span style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 15, color: "#f0f0f0", letterSpacing: "-0.03em" }}>BlackRoad OS</span>
               </div>
@@ -546,7 +576,7 @@ export default function BlackRoadAuth() {
 
             {/* Footer */}
             <div style={{ padding: split ? "16px 64px" : "16px 24px", borderTop: "1px solid #0a0a0a", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-              <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>blackroad.io · blackroad.systems · Z:=yx−w · BlackRoad OS, Inc.</span>
+              <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>BlackRoad OS — Pave Tomorrow.</span>
               <div style={{ display: "flex", gap: 16 }}>
                 {["Terms", "Privacy", "Docs"].map(l => (
                   <span key={l} style={{ fontFamily: inter, fontSize: 11, color: "#1e1e1e", cursor: "pointer", transition: "color 0.15s" }}

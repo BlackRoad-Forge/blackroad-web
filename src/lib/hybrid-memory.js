@@ -450,7 +450,7 @@ function fmt(gb) {
 
 // ─── Cluster stats per memory type ───────────────────────────────
 export function getStats() {
-  const totalPhysGB = Object.values(NODES).reduce((s, n) => s + n.gb, 0);
+  const _totalPhysGB = Object.values(NODES).reduce((s, n) => s + n.gb, 0);
 
   return MEMORY_TYPES.map(mt => {
     // Sum physical GB across this type's assigned nodes

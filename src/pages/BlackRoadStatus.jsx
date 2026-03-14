@@ -72,13 +72,13 @@ const INCIDENTS = [
   },
   {
     id: "INC-0040",
-    title: "RoadCode sync completed — 186 repos mirrored",
+    title: "RoadCode sync completed — 207 repos mirrored",
     status: "resolved",
     statusColor: "#00D4FF",
     date: "Mar 07, 2026",
     time: "22:00 UTC",
     updates: [
-      { time: "22:45 UTC", text: "RoadCode sync completed successfully. All 186 repositories across 8 organizations mirrored to Octavia (Pi 5, :3100). No data loss detected." },
+      { time: "22:45 UTC", text: "RoadCode sync completed successfully. All 207 repositories across 8 organizations mirrored to Octavia (Pi 5, :3100). No data loss detected." },
       { time: "22:00 UTC", text: "Scheduled RoadCode sync initiated — mirroring all repositories from blackroad-os, lucidia, roadchain, infrastructure, agents, platform, services, and tools orgs." },
     ],
   },
@@ -90,7 +90,7 @@ const INCIDENTS = [
     date: "Mar 06, 2026",
     time: "16:14 UTC",
     updates: [
-      { time: "16:22 UTC", text: "Cloudflare Pages deployment successful across all 20 zones. 48 domains verified, 6 tunnels healthy. Edge propagation complete." },
+      { time: "16:22 UTC", text: "Cloudflare Pages deployment successful across all 20 zones. 141 domains verified, 6 tunnels healthy. Edge propagation complete." },
       { time: "16:14 UTC", text: "Initiated Cloudflare Pages deploy for BlackRoad Cloud. Build triggered from RoadCode push to main branch." },
     ],
   },
@@ -110,7 +110,7 @@ const INCIDENTS = [
 
 // ─── Uptime bar data (90 days, 1 bar = 1 day) ────────────────────
 function generateUptimeBars(uptime) {
-  return Array.from({ length: 90 }, (_, i) => {
+  return Array.from({ length: 90 }, (_v, _i) => {
     const r = Math.random();
     const threshold = uptime / 100;
     if (r > threshold + 0.01) return "outage";
@@ -212,7 +212,7 @@ function ServiceRow({ item }) {
         {/* Latency */}
         <span style={{ fontFamily: mono, fontSize: 10, color: "#2a2a2a", width: 52, textAlign: "right" }}>{item.latency}</span>
         {/* Status label */}
-        <span style={{ fontFamily: mono, fontSize: 9, color: st.color, width: 110, textAlign: "right", letterSpacing: "0.04em" }}>{st.label}</span>
+        <span style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5", width: 110, textAlign: "right", letterSpacing: "0.04em" }}>{st.label}</span>
         {/* Uptime */}
         <span style={{ fontFamily: mono, fontSize: 10, color: "#2a2a2a", width: 52, textAlign: "right" }}>{item.uptime.toFixed(2)}%</span>
         {/* Expand */}
@@ -238,8 +238,9 @@ function ServiceGroup({ group }) {
     <div style={{ background: "#080808", border: "1px solid #111", marginBottom: 8 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderBottom: "1px solid #0d0d0d" }}>
         <span style={{ fontFamily: grotesk, fontWeight: 600, fontSize: 13, color: "#888", letterSpacing: "-0.01em" }}>{group.group}</span>
-        <span style={{ fontFamily: mono, fontSize: 9, color: allOk ? "#00D4FF44" : "#FF6B2B", letterSpacing: "0.06em" }}>
-          {allOk ? "All Operational" : "Issues Detected"}
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 5, letterSpacing: "0.06em" }}>
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: allOk ? "#00D4FF" : "#FF6B2B", flexShrink: 0 }} />
+          <span style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5" }}>{allOk ? "All Operational" : "Issues Detected"}</span>
         </span>
       </div>
       {group.items.map(item => <ServiceRow key={item.id} item={item} />)}
@@ -262,7 +263,10 @@ function IncidentCard({ inc }) {
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: inter, fontSize: 13, color: "#c0c0c0", marginBottom: 4 }}>{inc.title}</div>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ fontFamily: mono, fontSize: 9, color: inc.statusColor, letterSpacing: "0.04em", textTransform: "uppercase" }}>{inc.status}</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: inc.statusColor, flexShrink: 0 }} />
+              <span style={{ fontFamily: mono, fontSize: 9, color: "#f5f5f5", letterSpacing: "0.04em", textTransform: "uppercase" }}>{inc.status}</span>
+            </span>
             <span style={{ fontFamily: mono, fontSize: 9, color: "#242424" }}>{inc.id}</span>
             <span style={{ fontFamily: mono, fontSize: 9, color: "#242424" }}>{inc.date} · {inc.time}</span>
           </div>
@@ -294,7 +298,10 @@ function MetricPill({ label, value, color }) {
   return (
     <div style={{ background: "#080808", border: "1px solid #111", padding: "16px 20px", flex: 1, minWidth: 120 }}>
       <div style={{ fontFamily: mono, fontSize: 9, color: "#2a2a2a", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 8 }}>{label}</div>
-      <div style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 22, color: color || "#e0e0e0", letterSpacing: "-0.02em" }}>{value}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ width: 6, height: 6, borderRadius: "50%", background: color || "#e0e0e0", flexShrink: 0 }} />
+        <span style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 22, color: "#f5f5f5", letterSpacing: "-0.02em" }}>{value}</span>
+      </div>
     </div>
   );
 }

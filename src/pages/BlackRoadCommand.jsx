@@ -9,13 +9,13 @@ const inter   = "'Inter', sans-serif";
 // ─── Command registry — real BlackRoad OS, Inc. infrastructure ────
 const COMMANDS = [
   // Navigation
-  { id: "nav-dashboard",  group: "Navigate",   icon: "◈", label: "Go to Dashboard",        sub: "186 repos · 8 orgs · 48 domains",       keys: ["G","D"],  color: "#4488FF" },
+  { id: "nav-dashboard",  group: "Navigate",   icon: "◈", label: "Go to Dashboard",        sub: "207 repos · 8 orgs · 141 domains",       keys: ["G","D"],  color: "#4488FF" },
   { id: "nav-explorer",   group: "Navigate",   icon: "◈", label: "Go to Explorer",          sub: "Project explorer · repo browser",        keys: ["G","E"],  color: "#4488FF" },
   { id: "nav-agents",     group: "Navigate",   icon: "◈", label: "Go to Agents",            sub: "8 agents · Alice through Sentinel",      keys: ["G","A"],  color: "#4488FF" },
   { id: "nav-settings",   group: "Navigate",   icon: "◈", label: "Go to Settings",          sub: "Cloudflare · tunnels · DNS zones",       keys: ["G","S"],  color: "#4488FF" },
   { id: "nav-docs",       group: "Navigate",   icon: "◈", label: "Go to Docs",              sub: "blackroad-docs · guides · wiki",         keys: ["G","?"],  color: "#4488FF" },
-  { id: "nav-status",     group: "Navigate",   icon: "◈", label: "Go to Status Page",       sub: "6 servers · 4 Pis · 2 droplets",         keys: [],         color: "#4488FF" },
-  { id: "nav-domains",    group: "Navigate",   icon: "◈", label: "Go to Domains",           sub: "48 domains · 20 Cloudflare zones",       keys: [],         color: "#4488FF" },
+  { id: "nav-status",     group: "Navigate",   icon: "◈", label: "Go to Status Page",       sub: "5 edge nodes · 4 Pis · 2 droplets",         keys: [],         color: "#4488FF" },
+  { id: "nav-domains",    group: "Navigate",   icon: "◈", label: "Go to Domains",           sub: "141 domains · 22 D1 databases",       keys: [],         color: "#4488FF" },
 
   // Servers
   { id: "srv-alice",      group: "Servers",    icon: "⬡", label: "SSH to Alice",            sub: "192.168.4.49 · docker, cloudflared, gitea, ollama",        keys: [],  color: "#00D4FF" },
@@ -24,7 +24,7 @@ const COMMANDS = [
   { id: "srv-aria",       group: "Servers",    icon: "⬡", label: "SSH to Aria",             sub: "192.168.4.98 · docker, nginx, postgresql, minio",          keys: [],  color: "#00D4FF" },
   { id: "srv-gematria",   group: "Servers",    icon: "⬡", label: "SSH to Gematria",         sub: "159.65.43.12 · docker, nginx, cloudflared, postgresql",    keys: [],  color: "#CC00AA" },
   { id: "srv-anastasia",  group: "Servers",    icon: "⬡", label: "SSH to Anastasia",        sub: "174.138.44.45 · docker, nginx, cloudflared, keycloak",     keys: [],  color: "#CC00AA" },
-  { id: "srv-health",     group: "Servers",    icon: "⬡", label: "Fleet health check",      sub: "Ping all 6 servers · service status",                     keys: [],  color: "#00D4FF" },
+  { id: "srv-health",     group: "Servers",    icon: "⬡", label: "Fleet health check",      sub: "Ping all 5 edge nodes · service status",                     keys: [],  color: "#00D4FF" },
   { id: "srv-restart",    group: "Servers",    icon: "⬡", label: "Rolling restart",          sub: "Zero-downtime fleet restart",                             keys: [],  color: "#FF6B2B" },
 
   // Agents
@@ -41,7 +41,7 @@ const COMMANDS = [
   // Tunnels & DNS
   { id: "cf-tunnel-pi",   group: "Cloudflare", icon: "▣", label: "blackroad-pi tunnel",     sub: "52915859… · 4 Pi nodes → Cloudflare",     keys: [],         color: "#FF6B2B" },
   { id: "cf-tunnel-luc",  group: "Cloudflare", icon: "▣", label: "lucidia tunnel",           sub: "b7e9f25e… · droplets → Cloudflare",       keys: [],         color: "#8844FF" },
-  { id: "cf-zones",       group: "Cloudflare", icon: "▣", label: "Manage DNS zones",         sub: "20 zones · 48 domains",                   keys: [],         color: "#FF6B2B" },
+  { id: "cf-zones",       group: "Cloudflare", icon: "▣", label: "Manage DNS zones",         sub: "20 zones · 141 domains",                   keys: [],         color: "#FF6B2B" },
   { id: "cf-workers",     group: "Cloudflare", icon: "▣", label: "Cloudflare Workers",       sub: "blackroad-api · memory-worker · metrics", keys: [],         color: "#FF6B2B" },
   { id: "cf-pages",       group: "Cloudflare", icon: "▣", label: "Cloudflare Pages",         sub: "blackroad-cloud · dashboard · status",    keys: [],         color: "#FF6B2B" },
 
@@ -55,7 +55,7 @@ const COMMANDS = [
   { id: "tool-theme",     group: "Tools",      icon: "◇", label: "Toggle theme",            sub: "Switch color mode",                      keys: [],         color: "#525252" },
   { id: "tool-copy-ws",   group: "Tools",      icon: "◇", label: "Copy org ID",              sub: "BlackRoad OS, Inc.",                     keys: [],         color: "#525252" },
   { id: "tool-shortcuts", group: "Tools",      icon: "◇", label: "View keyboard shortcuts", sub: "Full shortcut reference",                keys: ["?"],      color: "#525252" },
-  { id: "tool-repos",     group: "Tools",      icon: "◇", label: "List all 186 repos",       sub: "8 orgs · blackroad-os through tools",    keys: [],         color: "#525252" },
+  { id: "tool-repos",     group: "Tools",      icon: "◇", label: "List all 207 repos",       sub: "8 orgs · blackroad-os through tools",    keys: [],         color: "#525252" },
   { id: "tool-feedback",  group: "Tools",      icon: "◇", label: "Send feedback",           sub: "Report a bug or request a feature",      keys: [],         color: "#525252" },
   { id: "tool-logout",    group: "Tools",      icon: "◇", label: "Sign out",                sub: "End your current session",               keys: [],         color: "#FF2255" },
 ];
@@ -120,7 +120,7 @@ function CmdRow({ cmd, active, onHover, onClick, recent, pinned }) {
 
       {/* Badges */}
       <div style={{ display: "flex", gap: 4, alignItems: "center", flexShrink: 0 }}>
-        {pinned  && <span style={{ fontFamily: mono, fontSize: 8, color: "#8844FF44", border: "1px solid #8844FF22", padding: "1px 5px" }}>pinned</span>}
+        {pinned  && <span style={{ fontFamily: mono, fontSize: 8, color: "#f5f5f5", border: "1px solid #8844FF22", padding: "1px 5px" }}>pinned</span>}
         {recent  && !pinned && <span style={{ fontFamily: mono, fontSize: 8, color: "#1e1e1e", border: "1px solid #111", padding: "1px 5px" }}>recent</span>}
         {cmd.keys.length > 0 && (
           <div style={{ display: "flex", gap: 3 }}>
@@ -341,7 +341,7 @@ function ShellPage({ onOpen }) {
           Everything in<br />one keystroke.
         </h1>
         <p style={{ fontFamily: inter, fontSize: 15, color: "#2e2e2e", lineHeight: 1.75, maxWidth: 440, marginBottom: 36 }}>
-          Control 6 servers, 8 agents, 186 repos, 48 domains, and 2 Cloudflare tunnels — without leaving your keyboard.
+          Control 5 edge nodes, 8 agents, 207 repos, 141 domains, and 2 Cloudflare tunnels — without leaving your keyboard.
         </p>
         <button onClick={onOpen}
           style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: mono, fontSize: 10, color: "#f0f0f0", background: GRAD, backgroundSize: "200% 100%", animation: "gradShift 4s linear infinite", border: "none", padding: "13px 28px", cursor: "pointer", textTransform: "uppercase", letterSpacing: "0.1em", transition: "opacity 0.15s" }}
@@ -385,7 +385,7 @@ function ShellPage({ onOpen }) {
         <div>
           <div style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e", textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 14 }}>Categories</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-            {groups.map((g, i) => {
+            {groups.map((g, _i) => {
               const cmds  = COMMANDS.filter(c => c.group === g);
               const color = cmds[0]?.color || "#525252";
               return (
@@ -409,7 +409,7 @@ function ShellPage({ onOpen }) {
 
       {/* Footer */}
       <div style={{ padding: "16px 48px", borderTop: "1px solid #0a0a0a", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-        <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>BlackRoad OS, Inc. · 6 servers · 8 agents · 186 repos</span>
+        <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>BlackRoad OS, Inc. · 5 edge nodes · 8 agents · 207 repos</span>
         <span style={{ fontFamily: mono, fontSize: 9, color: "#141414" }}>{COMMANDS.length} commands registered</span>
       </div>
     </div>

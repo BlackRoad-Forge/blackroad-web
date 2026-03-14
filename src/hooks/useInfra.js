@@ -100,7 +100,7 @@ export function useDomainStatus() {
       const results = await Promise.all(
         allDomains.map(async (domain) => {
           try {
-            const res = await fetch(`https://${domain}`, {
+            await fetch(`https://${domain}`, {
               mode: 'no-cors',
               signal: AbortSignal.timeout(5000),
             });

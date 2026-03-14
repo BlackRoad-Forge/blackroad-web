@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useLiveStats } from "../lib/useLiveData";
 
 // ─── Brand ────────────────────────────────────────────────────────
 const STOPS   = ["#FF6B2B","#FF2255","#CC00AA","#8844FF","#4488FF","#00D4FF"];
@@ -33,9 +34,9 @@ const agentData = [
 ];
 
 const events = [
-  { time: "2m ago",  type: "deploy",  msg: "RoadCode — 186 repos synced to Octavia NVMe", color: "#00D4FF" },
+  { time: "2m ago",  type: "deploy",  msg: "RoadCode — 207 repos synced to Octavia NVMe", color: "#00D4FF" },
   { time: "8m ago",  type: "deploy",  msg: "blackroad-cloud deployed to Cloudflare Pages", color: "#8844FF" },
-  { time: "14m ago", type: "agent",   msg: "Alice routing 48 domains via blackroad-pi tunnel", color: "#FF6B2B" },
+  { time: "14m ago", type: "agent",   msg: "Alice routing 141 domains via blackroad-pi tunnel", color: "#FF6B2B" },
   { time: "31m ago", type: "deploy",  msg: "Google Drive sync — all projects backed up to 2TB", color: "#00D4FF" },
   { time: "1h ago",  type: "agent",   msg: "Cecilia MinIO storage online — Hailo AI active", color: "#CC00AA" },
   { time: "2h ago",  type: "deploy",  msg: "Octavia Docker Swarm — ollama, nats, gitea running", color: "#8844FF" },
@@ -44,11 +45,11 @@ const events = [
 ];
 
 const METRICS = [
-  { label: "Git Repos",        value: "186",      delta: "+161 today", up: true,  color: "#4488FF",  sub: "RoadCode on Octavia" },
-  { label: "Live Domains",     value: "48",       delta: "23 active",  up: true,  color: "#00D4FF",  sub: "via Cloudflare tunnels" },
+  { label: "Git Repos",        value: "207",      delta: "Gitea + GitHub", up: true,  color: "#4488FF",  sub: "RoadCode on Octavia" },
+  { label: "Live Domains",     value: "141",      delta: "100 Pages",  up: true,  color: "#00D4FF",  sub: "via Cloudflare" },
   { label: "Active Agents",    value: "8 / 8",    delta: "100%",       up: true,  color: "#8844FF",  sub: "all systems nominal" },
-  { label: "Tunnel Conns",     value: "24",       delta: "6 tunnels",  up: true,  color: "#CC00AA",  sub: "across 4 Pis + 2 DOs" },
-  { label: "Pages Projects",   value: "57",       delta: "13 custom",  up: true,  color: "#FF6B2B",  sub: "Cloudflare Pages" },
+  { label: "Tunnel Conns",     value: "18",       delta: "4 tunnels",  up: true,  color: "#CC00AA",  sub: "across Pi fleet" },
+  { label: "Pages Projects",   value: "100",      delta: "141 domains",up: true,  color: "#FF6B2B",  sub: "Cloudflare Pages" },
   { label: "Physical Storage",  value: "3.3 TB",   delta: "2TB free",   up: true,  color: "#FF2255",  sub: "8 nodes + Google Drive" },
   { label: "Pixel Memory",     value: "13.5 PB",  delta: "×4096",      up: true,  color: "#8844FF",  sub: "content-addressable · 12 tiers" },
 ];
@@ -189,7 +190,7 @@ function Nav({ active, setActive }) {
 
 // ─── Metric Card ─────────────────────────────────────────────────
 function MetricCard({ m, delay }) {
-  const [count, setCount] = useState(0);
+  const [_count, setCount] = useState(0);
   const numericVal = parseFloat(m.value.replace(/[^0-9.]/g, ""));
   useEffect(() => {
     let start = 0;
@@ -215,8 +216,9 @@ function MetricCard({ m, delay }) {
           {m.value}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ fontFamily: mono, fontSize: 11, color: m.up ? "#00D4FF" : "#FF2255" }}>
-            {m.up ? "↑" : "↓"} {m.delta}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: m.up ? "#00D4FF" : "#FF2255", display: "inline-block", flexShrink: 0 }} />
+            <span style={{ fontFamily: mono, fontSize: 11, color: "#f5f5f5" }}>{m.up ? "↑" : "↓"} {m.delta}</span>
           </span>
           <span style={{ fontFamily: inter, fontSize: 11, color: "#404040" }}>{m.sub}</span>
         </div>
@@ -236,7 +238,7 @@ function Dot({ color = "#00D4FF" }) {
 }
 
 // ─── Agent Row ────────────────────────────────────────────────────
-function AgentRow({ a, delay, i }) {
+function AgentRow({ a, delay, _i }) {
   const pct = (a.calls / 4821) * 100;
   return (
     <FadeIn delay={delay}>
@@ -247,7 +249,10 @@ function AgentRow({ a, delay, i }) {
           <div style={{ height: "100%", width: `${pct}%`, background: a.color, borderRadius: 2, transition: "width 1s ease", animation: `barGrow 1s ease ${delay}ms both` }} />
         </div>
         <div style={{ fontFamily: mono, fontSize: 11, color: "#555", width: 50, textAlign: "right", flexShrink: 0 }}>{a.calls.toLocaleString()}</div>
-        <div style={{ fontFamily: mono, fontSize: 11, color: a.success > 96 ? "#00D4FF" : "#FF6B2B", width: 42, textAlign: "right", flexShrink: 0 }}>{a.success}%</div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4, width: 42, flexShrink: 0 }}>
+          <span style={{ width: 4, height: 4, borderRadius: "50%", background: a.success > 96 ? "#00D4FF" : "#FF6B2B", flexShrink: 0 }} />
+          <span style={{ fontFamily: mono, fontSize: 11, color: "#f5f5f5" }}>{a.success}%</span>
+        </div>
       </div>
     </FadeIn>
   );
@@ -259,7 +264,7 @@ function EventRow({ e, delay }) {
   return (
     <FadeIn delay={delay}>
       <div style={{ display: "flex", gap: 12, padding: "10px 0", borderBottom: "1px solid #0d0d0d", alignItems: "flex-start" }}>
-        <div style={{ fontFamily: mono, fontSize: 12, color: e.color, flexShrink: 0, marginTop: 1 }}>{icons[e.type] || "·"}</div>
+        <div style={{ fontFamily: mono, fontSize: 12, color: "#f5f5f5", flexShrink: 0, marginTop: 1 }}><span style={{ color: e.color }}>●</span> {icons[e.type] || "·"}</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: inter, fontSize: 12, color: "#c0c0c0", lineHeight: 1.4 }}>{e.msg}</div>
         </div>
@@ -278,15 +283,24 @@ function Label({ children }) {
 function Overview() {
   const w = useWidth();
   const cols = w >= 900 ? "repeat(3, 1fr)" : w >= 580 ? "repeat(2, 1fr)" : "1fr";
+  const { stats } = useLiveStats();
+
+  // Override hardcoded metrics with live data when available
+  const liveMetrics = stats ? [
+    { label: "Git Repos",        value: String(stats.repos),   delta: "live from GitHub", up: true,  color: "#4488FF",  sub: "Gitea + GitHub" },
+    { label: "Live Domains",     value: String(stats.domains), delta: `${stats.pages} Pages`,  up: true,  color: "#00D4FF",  sub: "via Cloudflare" },
+    { label: "Users",            value: String(stats.users),   delta: `${stats.sessions} sessions`,  up: true,  color: "#8844FF",  sub: stats.authUp ? "auth online" : "auth offline" },
+    ...METRICS.slice(3),
+  ] : METRICS;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
 
       {/* Metric cards */}
       <div>
-        <Label>Key Metrics</Label>
+        <Label>Key Metrics {stats ? "· Live" : ""}</Label>
         <div style={{ display: "grid", gridTemplateColumns: cols, gap: 8 }}>
-          {METRICS.map((m, i) => <MetricCard key={m.label} m={m} delay={i * 60} />)}
+          {liveMetrics.map((m, i) => <MetricCard key={m.label} m={m} delay={i * 60} />)}
         </div>
       </div>
 
@@ -295,7 +309,7 @@ function Overview() {
         <Card style={{ padding: 0 }}>
           <div style={{ padding: "18px 20px 10px" }}>
             <Label>Revenue · 12-Month</Label>
-            <div style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 26, color: "#f0f0f0", letterSpacing: "-0.03em" }}>$161.2K <span style={{ fontFamily: mono, fontSize: 12, color: "#00D4FF", fontWeight: 400 }}>↑ 23.1%</span></div>
+            <div style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 26, color: "#f0f0f0", letterSpacing: "-0.03em" }}>$161.2K <span style={{ fontFamily: mono, fontSize: 12, color: "#f5f5f5", fontWeight: 400 }}>↑ 23.1%</span></div>
           </div>
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={revenueData} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
@@ -322,7 +336,7 @@ function Overview() {
           <Card style={{ padding: 0 }}>
             <div style={{ padding: "18px 20px 10px" }}>
               <Label>API Requests · Today</Label>
-              <div style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 22, color: "#f0f0f0", letterSpacing: "-0.03em" }}>12,847 <span style={{ fontFamily: mono, fontSize: 11, color: "#8844FF", fontWeight: 400 }}>↑ 18.4%</span></div>
+              <div style={{ fontFamily: grotesk, fontWeight: 700, fontSize: 22, color: "#f0f0f0", letterSpacing: "-0.03em" }}>12,847 <span style={{ fontFamily: mono, fontSize: 11, color: "#f5f5f5", fontWeight: 400 }}>↑ 18.4%</span></div>
             </div>
             <ResponsiveContainer width="100%" height={140}>
               <BarChart data={requestData} margin={{ top: 0, right: 0, bottom: 0, left: -20 }}>
@@ -385,7 +399,7 @@ function PlaceholderPage({ name, color }) {
 export default function BlackRoadDashboard() {
   const [active, setActive] = useState("Overview");
   const w = useWidth();
-  const pad = w < 480 ? "0 14px" : w < 768 ? "0 20px" : "0 28px";
+
 
   const pageMap = {
     Overview: <Overview />,
@@ -450,7 +464,7 @@ export default function BlackRoadDashboard() {
 
         {/* Footer */}
         <div style={{ borderTop: "1px solid #0d0d0d", padding: "16px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-          <div style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e" }}>BlackRoad OS · Internal Dashboard · Z:=yx−w</div>
+          <div style={{ fontFamily: mono, fontSize: 9, color: "#1e1e1e" }}>BlackRoad OS — Pave Tomorrow.</div>
           <div style={{ height: 1, width: 40, background: GRAD, opacity: 0.5 }} />
           <div style={{ fontFamily: mono, fontSize: 9, color: "#1a1a1a" }}>v2 · 2026</div>
         </div>
